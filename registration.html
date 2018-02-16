@@ -1,0 +1,57 @@
+<html>
+<head>
+<script src="https://www.gstatic.com/firebasejs/4.9.1/firebase.js"></script>
+<script src="https://www.gstatic.com/firebasejs/4.9.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/4.9.0/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/3.1.0/firebase-database.js"></script>
+<script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyDgmr1gHYSvDazzIWev9zAerufIal_GIJo",
+    authDomain: "moodle-course.firebaseapp.com",
+    databaseURL: "https://moodle-course.firebaseio.com",
+    projectId: "moodle-course",
+    storageBucket: "moodle-course.appspot.com",
+    messagingSenderId: "604866615289"
+  };
+  firebase.initializeApp(config);
+  function createUser() {
+    if(!firebase.auth().currentUser) return;
+    var email = document.getElementById('email').value;
+    var password = document.getElementById('password').value;
+    var group = document.getElementById('group').value;
+    if (email.length < 4) {
+      alert('Please enter an email address.');
+      return;
+    }
+    if (password.length < 4) {
+      alert('Please enter a password.');
+      return;
+    }
+    if (group!="student" && group!="professor"){
+      alert('Please enter student or professor.');
+      return;
+    }
+    firebase.auth().createUserWithEmailAndPassword(email,password)
+  .then(function(userRecord) {
+    // See the UserRecord reference doc for the contents of userRecord.
+    var postData = {
+	trial_course: true
+    };
+    firebase.database().ref('/groups/' + group + '/' + userRecord.uid).set(postData);
+    if (group=="professor"){
+      firebase.database().ref('/users/' + userRecord.uid).set({professor:true,student:false});
+    }else{firebase.database().ref('/users/' + userRecord.uid).set({professor:false,student:true});}
+    console.log("Successfully created new user:", userRecord.uid);
+    
+  })
+  .catch(function(error) {
+    console.log("Error creating new user:", error);
+  });
+}
+</script>
+<body>
+<input id="email" /><input id="password" type="password"><input id="group" /><button onclick="createUser()">register</button>
+</form>
+</body>
+</html>
