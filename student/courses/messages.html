@@ -16,40 +16,29 @@
     messagingSenderId: "604866615289"
   };
   firebase.initializeApp(config);
-  var uid;
-  firebase.auth().onAuthStateChanged( user => {
-  if (user) { this.uid = user.uid 
-  firebase.database().ref('groups/professor/' + uid).once('value').then(function(snapshot) {
+  firebase.database().ref('/courses').once('value').then(function(snapshot) {
 	var list= snapshot.val();console.log(list);
 	for ( var i in list){
 		var li = document.createElement("li");
 		var textnode=document.createTextNode(i);
 		li.appendChild(textnode);
 		document.getElementById("courses").appendChild(li);
-		var dl = document.createElement("dl");
-		li.appendChild(dl);
-		firebase.database().ref('/messages/' + i).once('value').then(function(snapshot) {
-			var list= snapshot.val();console.log(list);
-			for ( var j in list){
-				var dt = document.createElement("dt");
-				var textnode2=document.createTextNode(j);
-				dt.appendChild(textnode2);
-				var parsedData = JSON.parse(list);
-				var textnode3 = document.getElementById(parsedData.message);
-				var dd = document.createElement("dd");
-				dt.appendChild(dd);
-				dd.appendChild(textnode3);
-			}
+		li.addEventListener('click', function(){
+			firebase.database().ref('/courses/' + i).once('value').then(function(snapshot) {
+		      if(snapshot.hasChild(firebase.auth().currentUser.uid)){
+			  	  alert("You are already enrolled");
+			  }else{
+			  var uid=firebase.auth().currentUser.uid;
+				firebase.database().ref('/members/' + i + '/' + uid).set(true);
+				firebase.database().ref('/courses/' + i + '/' + uid).set(true);
+				firebase.database().ref('/groups/' + 'student/' + uid + '/' + i).set(true);
+			  }
+		    });
 		});
 	}
-  });}
-
-}).bind(this);
-  
+  });
 </script>
 <body>
-Click on any course to enroll
 <ul id="courses"></ul>
-<a href="messages.html">messages</a>
 </body>
 </html>
