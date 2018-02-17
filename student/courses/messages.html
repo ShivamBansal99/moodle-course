@@ -16,29 +16,41 @@
     messagingSenderId: "604866615289"
   };
   firebase.initializeApp(config);
-  firebase.database().ref('/courses').once('value').then(function(snapshot) {
+  var uid;
+  firebase.auth().onAuthStateChanged( user => {
+  if (user) { this.uid = user.uid 
+  firebase.database().ref('groups/student/' + uid).once('value').then(function(snapshot) {
 	var list= snapshot.val();console.log(list);
 	for ( var i in list){
 		var li = document.createElement("li");
 		var textnode=document.createTextNode(i);
 		li.appendChild(textnode);
 		document.getElementById("courses").appendChild(li);
-		li.addEventListener('click', function(){
-			firebase.database().ref('/courses/' + i).once('value').then(function(snapshot) {
-		      if(snapshot.hasChild(firebase.auth().currentUser.uid)){
-			  	  alert("You are already enrolled");
-			  }else{
-			  var uid=firebase.auth().currentUser.uid;
-				firebase.database().ref('/members/' + i + '/' + uid).set(true);
-				firebase.database().ref('/courses/' + i + '/' + uid).set(true);
-				firebase.database().ref('/groups/' + 'student/' + uid + '/' + i).set(true);
-			  }
-		    });
+		var dl = document.createElement("dl");
+		li.appendChild(dl);
+		firebase.database().ref('/messages/' + i).once('value').then(function(snapshot) {
+			var mess= snapshot.val();console.log(list);
+			for ( var j in mess){
+				var dt = document.createElement("dt");
+				var textnode2=document.createTextNode(j);
+				dt.appendChild(textnode2);
+				firebase.database().ref('/messages/' + i + '/' + j).once('value').then(function(snapshot) {
+					var textnode3 = document.createTextNode(snapshot.val().message);console.log('/messages/' + i + '/' + j+ '/'+textnode3);
+					var dd = document.createElement("dd");
+					dd.appendChild(textnode3);
+					dl.appendChild(dt);
+					dl.appendChild(dd);					
+				});
+
+			}
 		});
 	}
-  });
+  });}
+
+}).bind(this);
+  
 </script>
 <body>
-<ul id="courses"></ul>
+all courses and messages<ul id="courses"></ul>
 </body>
 </html>

@@ -29,16 +29,19 @@
 		var dl = document.createElement("dl");
 		li.appendChild(dl);
 		firebase.database().ref('/messages/' + i).once('value').then(function(snapshot) {
-			var list= snapshot.val();console.log(list);
-			for ( var j in list){
+			var mess= snapshot.val();console.log(list);
+			for ( var j in mess){
 				var dt = document.createElement("dt");
 				var textnode2=document.createTextNode(j);
 				dt.appendChild(textnode2);
-				var parsedData = JSON.parse(list);
-				var textnode3 = document.getElementById(parsedData.message);
-				var dd = document.createElement("dd");
-				dt.appendChild(dd);
-				dd.appendChild(textnode3);
+				firebase.database().ref('/messages/' + i + '/' + j).once('value').then(function(snapshot) {
+					var textnode3 = document.createTextNode(snapshot.val().message);console.log('/messages/' + i + '/' + j+ '/'+textnode3);
+					var dd = document.createElement("dd");
+					dd.appendChild(textnode3);
+					dl.appendChild(dt);
+					dl.appendChild(dd);					
+				});
+
 			}
 		});
 	}
@@ -48,8 +51,6 @@
   
 </script>
 <body>
-Click on any course to enroll
-<ul id="courses"></ul>
-<a href="messages.html">messages</a>
+all courses and messages<ul id="courses"></ul>
 </body>
 </html>
