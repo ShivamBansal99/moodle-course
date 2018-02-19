@@ -1,0 +1,34 @@
+<html>
+<head>
+<script src="https://www.gstatic.com/firebasejs/4.9.1/firebase.js"></script>
+<script src="https://www.gstatic.com/firebasejs/4.9.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/4.9.0/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/3.1.0/firebase-database.js"></script>
+<script>
+  var grp=false;
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyDgmr1gHYSvDazzIWev9zAerufIal_GIJo",
+    authDomain: "moodle-course.firebaseapp.com",
+    databaseURL: "https://moodle-course.firebaseio.com",
+    projectId: "moodle-course",
+    storageBucket: "moodle-course.appspot.com",
+    messagingSenderId: "604866615289"
+  };
+  firebase.initializeApp(config);
+  function createMessage(){
+      
+  	  var courseName=document.getElementById("course").value;
+	  var messageHead = document.getElementById("messageHead").value;
+	  var messageBody = document.getElementById("messageBody").value;
+	  firebase.database().ref('/messages/' + courseName + '/' + messageHead + '/' + firebase.auth().currentUser.uid).set(true);
+	  firebase.database().ref('/messages/' + courseName + '/' + messageHead + '/' + 'message').set(messageBody);
+	  firebase.database().ref('/messages/' + courseName + '/' + messageHead + '/' + '/timestamp').set(Date.now()/1000 | 0);
+	  alert("course created");
+  }
+</script>
+<body>
+create message<br />
+<input id="course" /><input id="messageHead" /><input id="messageBody" /><button onclick="createMessage()">Create</button>
+</body>
+</html>

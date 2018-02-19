@@ -1,0 +1,32 @@
+<html>
+<head>
+<script src="https://www.gstatic.com/firebasejs/4.9.1/firebase.js"></script>
+<script src="https://www.gstatic.com/firebasejs/4.9.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/4.9.0/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/3.1.0/firebase-database.js"></script>
+<script>
+  var grp=false;
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyDgmr1gHYSvDazzIWev9zAerufIal_GIJo",
+    authDomain: "moodle-course.firebaseapp.com",
+    databaseURL: "https://moodle-course.firebaseio.com",
+    projectId: "moodle-course",
+    storageBucket: "moodle-course.appspot.com",
+    messagingSenderId: "604866615289"
+  };
+  firebase.initializeApp(config);
+  function createCourse(){
+      
+  	  courseName=document.getElementById("course").value;
+	  firebase.database().ref('/courses/' + courseName + '/' + firebase.auth().currentUser.uid + '/timestamp').set(Date.now()/1000 | 0);
+	  firebase.database().ref('/members/' + courseName + '/' + firebase.auth().currentUser.uid ).set(true);
+	  firebase.database().ref('/groups/professor/' + firebase.auth().currentUser.uid + '/' + courseName).set(true);
+	  alert("course created");
+  }
+</script>
+<body>
+create course<br />
+<input id="course" /><button onclick="createCourse()">Create</button>
+</body>
+</html>
