@@ -1,11 +1,10 @@
 <html>
 <head>
+
 <script src="https://www.gstatic.com/firebasejs/4.9.1/firebase.js"></script>
 <script src="https://www.gstatic.com/firebasejs/4.9.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/4.9.0/firebase-auth.js"></script>
-<script src="https://www.gstatic.com/firebasejs/3.1.0/firebase-database.js"></script>
 <script>
-  var grp=false;
   // Initialize Firebase
   var config = {
     apiKey: "AIzaSyDgmr1gHYSvDazzIWev9zAerufIal_GIJo",
@@ -34,18 +33,7 @@
         }
         // Sign in with email and pass.
         // [START authwithemail]
-	
-        firebase.auth().signInWithEmailAndPassword(email, password).then(function(){
-		var uid = firebase.auth().currentUser.uid;
-		firebase.database().ref('/users/' + uid).once('value').then(function(snapshot) {
-		  grp = snapshot.val().student;console.log(grp);
-		  if(grp==true){window.location.href='student/courses/index.html';}
-		  else{window.location.href='professor/courses/index.html'}
-		});console.log(grp);
-		
-})
-		
-	.catch(function(error) {
+        firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
           // Handle Errors here.
           var errorCode = error.code;
           var errorMessage = error.message;
@@ -66,9 +54,6 @@
 
 </head>
 <body>
-<a href="registration.html">register</a>
-<input id="email" /><input id="password" type="password"><button onclick="toggleSignIn()">login</button>
-
-</form>
+<button onclick="toggleSignIn()">logout</button>
 </body>
 </html>
