@@ -17,25 +17,25 @@
   };
   firebase.initializeApp(config);
   firebase.database().ref('/courses').once('value').then(function(snapshot) {
-	var list= snapshot.val();console.log(list);
-	for ( var i in list){
-		var li = document.createElement("li");
-		var textnode=document.createTextNode(i);
-		li.appendChild(textnode);
-		document.getElementById("courses").appendChild(li);
-		li.addEventListener('click', function(){
-			firebase.database().ref('/courses/' + i).once('value').then(function(snapshot) {
-		      if(snapshot.hasChild(firebase.auth().currentUser.uid)){
-			  	  alert("You are already enrolled");
-			  }else{
+	var func = function(){
+			i=this.innerHTML;
+			if(list[i].hasOwnProperty(firebase.auth().currentUser.uid)){
+			alert("You are already enrolled");console.log(i);
+			}else{
 			  var uid=firebase.auth().currentUser.uid;
 				firebase.database().ref('/members/' + i + '/' + uid).set(true);
 				firebase.database().ref('/courses/' + i + '/' + uid + '/timestamp').set(Date.now()/1000 | 0);
 				firebase.database().ref('/groups/' + 'student/' + uid + '/' + i).set(true);
 				alert("Joined!");
-			  }
-		    });
-		});
+			}
+	}
+	var list= snapshot.val();console.log(list);
+	for ( var i in list){
+		var li = document.createElement("li");console.log(list[i]);
+		var textnode=document.createTextNode(i);
+		li.appendChild(textnode);
+		document.getElementById("courses").appendChild(li);
+		li.addEventListener('click',func);
 	}
   });
 </script>

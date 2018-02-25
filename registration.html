@@ -18,7 +18,9 @@
   function createUser() {
     if(!firebase.auth().currentUser) return;
     var email = document.getElementById('email').value;
+	email=email+'@d.com';
     var password = document.getElementById('password').value;
+	password=password+'99_88';
     var group = document.getElementById('group').value;
     if (email.length < 4) {
       alert('Please enter an email address.');

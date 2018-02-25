@@ -24,7 +24,7 @@
 	  firebase.database().ref('/messages/' + courseName + '/' + messageHead + '/' + firebase.auth().currentUser.uid).set(true);
 	  firebase.database().ref('/messages/' + courseName + '/' + messageHead + '/' + 'message').set(messageBody);
 	  firebase.database().ref('/messages/' + courseName + '/' + messageHead + '/' + '/timestamp').set(Date.now()/1000 | 0);
-	  alert("course created");
+	  alert("messaged");
   }
 </script>
 <body>

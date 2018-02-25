@@ -16,24 +16,27 @@
     messagingSenderId: "604866615289"
   };
   firebase.initializeApp(config);
-  var uid;
+  var uid,count=0;
   firebase.auth().onAuthStateChanged( user => {
-  if (user) { this.uid = user.uid 
-  firebase.database().ref('groups/professor/' + uid).once('value').then(function(snapshot) {
-	var list= snapshot.val();console.log(list);
-	for ( var i in list){
+   if (user) { this.uid = user.uid 
+    firebase.database().ref('groups/professor/' + uid).once('value').then(function(snapshot) {
+	 var list= snapshot.val();
+	 for (let i in list){
+		
+		firebase.database().ref('/messages/' + i + '/').once('value').then(function(snapshot) {
+		console.log(i);count++;
 		var li = document.createElement("li");
 		var textnode=document.createTextNode(i);
 		li.appendChild(textnode);
 		document.getElementById("courses").appendChild(li);
 		var dl = document.createElement("dl");
 		li.appendChild(dl);
-		firebase.database().ref('/messages/' + i).once('value').then(function(snapshot) {
-			var mess= snapshot.val();console.log(list);
-			for ( var j in mess){
+			var mess= snapshot.val();console.log(mess);
+			for ( let j in mess){
 				var dt = document.createElement("dt");
 				var textnode2=document.createTextNode(j);
 				dt.appendChild(textnode2);
+				console.log('/messages/' + i + '/' + j+ '/');
 				firebase.database().ref('/messages/' + i + '/' + j).once('value').then(function(snapshot) {
 					var textnode3 = document.createTextNode(snapshot.val().message);console.log('/messages/' + i + '/' + j+ '/'+textnode3);
 					var dd = document.createElement("dd");
@@ -41,14 +44,12 @@
 					dl.appendChild(dt);
 					dl.appendChild(dd);					
 				});
-
 			}
 		});
-	}
-  });}
-
-}).bind(this);
-  
+	 }console.log(count);
+    });
+   }
+  });
 </script>
 <body>
 <a href="../logout.html">logout</a>

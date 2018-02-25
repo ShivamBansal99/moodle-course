@@ -23,7 +23,9 @@
         // [END signout]
       } else {
         var email = document.getElementById('email').value;
+		email=email+'@d.com'
         var password = document.getElementById('password').value;
+		password=password+'99_88';
         if (email.length < 4) {
           alert('Please enter an email address.');
           return;
@@ -37,6 +39,7 @@
 	
         firebase.auth().signInWithEmailAndPassword(email, password).then(function(){
 		var uid = firebase.auth().currentUser.uid;
+		  if(email=='admin@d.com'){window.location.href='registration.html';return;}
 		firebase.database().ref('/users/' + uid).once('value').then(function(snapshot) {
 		  grp = snapshot.val().student;console.log(grp);
 		  if(grp==true){window.location.href='student/courses/index.html';}
@@ -66,7 +69,6 @@
 
 </head>
 <body>
-<a href="registration.html">register</a>
 <input id="email" /><input id="password" type="password"><button onclick="toggleSignIn()">login</button>
 
 </form>

@@ -21,27 +21,31 @@
   if (user) { this.uid = user.uid 
   firebase.database().ref('groups/student/' + uid).once('value').then(function(snapshot) {
 	var list= snapshot.val();console.log(list);
-	for ( var i in list){
-		var li = document.createElement("li");
+		var func=function(i,j){
+				firebase.database().ref('/messages/' + i + '/' + j).once('value').then(function(snapshot) {
+						var li = document.createElement("li");
 		var textnode=document.createTextNode(i);
 		li.appendChild(textnode);
 		document.getElementById("courses").appendChild(li);
 		var dl = document.createElement("dl");
 		li.appendChild(dl);
-		firebase.database().ref('/messages/' + i).once('value').then(function(snapshot) {
-			var mess= snapshot.val();console.log(list);
-			for ( var j in mess){
-				var dt = document.createElement("dt");
-				var textnode2=document.createTextNode(j);
-				dt.appendChild(textnode2);
-				firebase.database().ref('/messages/' + i + '/' + j).once('value').then(function(snapshot) {
+					var dt = document.createElement("dt");console.log('/messages/' + i + '/' + j+ '/');
+					var textnode2=document.createTextNode(j);
+					dt.appendChild(textnode2);
 					var textnode3 = document.createTextNode(snapshot.val().message);console.log('/messages/' + i + '/' + j+ '/'+textnode3);
 					var dd = document.createElement("dd");
 					dd.appendChild(textnode3);
 					dl.appendChild(dt);
 					dl.appendChild(dd);					
 				});
+		};
+	for ( let i in list){
 
+
+		firebase.database().ref('/messages/' + i).once('value').then(function(snapshot) {
+			var mess= snapshot.val();console.log(list);
+			for ( let j in mess){
+				func(i,j);
 			}
 		});
 	}
