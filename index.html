@@ -17,7 +17,7 @@
   };
   firebase.initializeApp(config);
     function toggleSignIn() {
-      if (firebase.auth().currentUser) {
+      if (firebase.auth().currentUser) { 
         // [START signout]
         firebase.auth().signOut();
         // [END signout]
