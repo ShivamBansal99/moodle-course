@@ -23,20 +23,26 @@
 	var list= snapshot.val();console.log(list);
 		var func=function(i,j){
 				firebase.database().ref('/messages/' + i + '/' + j).once('value').then(function(snapshot) {
-						var li = document.createElement("li");
-		var textnode=document.createTextNode(i);
-		li.appendChild(textnode);
-		document.getElementById("courses").appendChild(li);
-		var dl = document.createElement("dl");
-		li.appendChild(dl);
-					var dt = document.createElement("dt");console.log('/messages/' + i + '/' + j+ '/');
-					var textnode2=document.createTextNode(j);
-					dt.appendChild(textnode2);
-					var textnode3 = document.createTextNode(snapshot.val().message);console.log('/messages/' + i + '/' + j+ '/'+textnode3);
-					var dd = document.createElement("dd");
-					dd.appendChild(textnode3);
-					dl.appendChild(dt);
-					dl.appendChild(dd);					
+				var snap=snapshot.val();var p=1;var parent=this;
+					firebase.database().ref('/courses/' + i + '/' + uid + '/timestamp').once("value").then(function(snapshot){
+						if(snapshot.val()<=snap.timestamp){
+							var li = document.createElement("li");
+							var textnode=document.createTextNode(i);
+							li.appendChild(textnode);
+							document.getElementById("courses").appendChild(li);
+							var dl = document.createElement("dl");
+							li.appendChild(dl);
+							var dt = document.createElement("dt");console.log('/messages/' + i + '/' + j+ '/');
+							var textnode2=document.createTextNode(j);
+							dt.appendChild(textnode2);
+							var textnode3 = document.createTextNode(snap.message);console.log('/messages/' + i + '/' + j+ '/'+textnode3);
+							var dd = document.createElement("dd");
+							dd.appendChild(textnode3);
+							dl.appendChild(dt);
+							dl.appendChild(dd);		
+						}
+					});
+			
 				});
 		};
 	for ( let i in list){

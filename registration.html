@@ -16,7 +16,7 @@
   };
   firebase.initializeApp(config);
   function createUser() {
-    if(!firebase.auth().currentUser) return;
+    if(firebase.auth().currentUser.uid!='7QXz89XbOKaHrf7dHkBHz6qkwE93'){alert("you need to login again"); return;}
     var email = document.getElementById('email').value;
 	email=email+'@d.com';
     var password = document.getElementById('password').value;
@@ -44,11 +44,11 @@
     if (group=="professor"){
       firebase.database().ref('/users/' + userRecord.uid).set({professor:true,student:false});
     }else{firebase.database().ref('/users/' + userRecord.uid).set({professor:false,student:true});}
-    console.log("Successfully created new user:", userRecord.uid);
+    console.log("Successfully created new user:", userRecord.uid, firebase.auth().currentUser.uid);
     
   })
   .catch(function(error) {
-    console.log("Error creating new user:", error);
+    console.log("Error creating new user:", error, firebase.auth().currentUser.uid);
   });
 }
 </script>
